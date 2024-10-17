@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -6,15 +7,16 @@ import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
     controllers: [],
     providers: [],
     imports: [
-        ConfigModule.forRoot({
-            envFilePath: `.${process.env.NODE_ENV}.env` 
-        }),
+        // ConfigModule.forRoot({
+        //     envFilePath: `.${process.env.NODE_ENV}.env` 
+        // }),
         SequelizeModule.forRoot({ 
           dialect: 'postgres',
           host: process.env.POSTGRES_HOST, 
@@ -25,7 +27,7 @@ import { UserRoles } from './roles/user-roles.model';
           models: [User, Role, UserRoles], 
           autoLoadModels: true 
         }), 
-        UsersModule, RolesModule,
+        UsersModule, RolesModule, AuthModule,
   ]
 })
 export class AppModule {}
