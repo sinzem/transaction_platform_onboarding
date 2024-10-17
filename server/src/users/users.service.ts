@@ -75,13 +75,13 @@ export class UsersService {
         return user;
     }
 
-    checkRole(role) {
+    private checkRole(role) {
         if (!role) {
             throw new HttpException("This role does not exist", HttpStatus.BAD_REQUEST);
         }
     }
 
-    checkUser(user) {
+    private checkUser(user) {
         if (!user) {
             throw new HttpException("User not found", HttpStatus.BAD_REQUEST);
         }
