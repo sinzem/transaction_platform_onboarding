@@ -27,7 +27,9 @@ import { AuthModule } from './auth/auth.module';
           models: [User, Role, UserRoles], 
           autoLoadModels: true 
         }), 
-        UsersModule, RolesModule, AuthModule,
+        UsersModule, 
+        RolesModule, 
+        AuthModule,
   ]
 })
 export class AppModule {}

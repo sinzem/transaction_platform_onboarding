@@ -2,22 +2,17 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
-import { RolesService } from 'src/roles/roles.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { TransformRoleDto } from './dto/transform-role.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
-                                   private roleService: RolesService) {}
+                                   ) {}
 
     async createUser(dto: CreateUserDto) {
         const hashPassword = await bcrypt.hash(dto.password, 5);
         const user = await this.userRepository.create({...dto, password: hashPassword});
-        const role = await this.roleService.getRoleByValue("USER"); 
-        await user.$set('roles', [role.id]); 
-        user.roles = [role]; 
         return user;
     }
 
@@ -42,9 +37,6 @@ export class UsersService {
 
     async getUserByEmail(email: string) {
         const user = await this.userRepository.findOne({where: {email}, include: {all: true}});
-        // if (!user) {
-        //     throw new HttpException("User with this email was not found", HttpStatus.BAD_REQUEST);
-        // }
         return user;
     }
     
@@ -55,33 +47,17 @@ export class UsersService {
         return user;
     }
 
-      async addRoleToUser(dto: TransformRoleDto) {
-        const roleById = await this.roleService.getRoleByValue(dto.role.toUpperCase()); 
-        this.checkRole(roleById);
-        let user = await this.getUserByEmail(dto.email);
-        this.checkUser(user);
-        await user.$add('roles', roleById.id);
-        user = await this.getUserByEmail(dto.email);
-        return user;
-    }
+    // async deleteRoleOfUser(dto: TransformRoleDto) {
+    //     const roleById = await this.roleService.getRoleByValue(dto.role.toUpperCase()); 
+    //     this.checkRole(roleById);
+    //     let user = await this.getUserByEmail(dto.email);
+    //     this.checkUser(user);
+    //     await user.$remove('roles', roleById.id);
+    //     user = await this.getUserByEmail(dto.email);
+    //     return user;
+    // }
 
-    async deleteRoleOfUser(dto: TransformRoleDto) {
-        const roleById = await this.roleService.getRoleByValue(dto.role.toUpperCase()); 
-        this.checkRole(roleById);
-        let user = await this.getUserByEmail(dto.email);
-        this.checkUser(user);
-        await user.$remove('roles', roleById.id);
-        user = await this.getUserByEmail(dto.email);
-        return user;
-    }
-
-    private checkRole(role) {
-        if (!role) {
-            throw new HttpException("This role does not exist", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private checkUser(user) {
+    checkUser(user: any) {
         if (!user) {
             throw new HttpException("User not found", HttpStatus.BAD_REQUEST);
         }

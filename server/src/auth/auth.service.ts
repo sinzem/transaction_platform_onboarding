@@ -3,10 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/users.model';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
     constructor(private userService: UsersService,
+                private roleService: RolesService,
                 private jwtService: JwtService) {}
 
     async registration(userDto: CreateUserDto) {
@@ -14,7 +16,10 @@ export class AuthService {
         if (candidate) {
             throw new HttpException("User with this email exists", HttpStatus.BAD_REQUEST)
         }
-        const user = await this.userService.createUser(userDto)
+        const user = await this.userService.createUser(userDto);
+        const role = await this.roleService.getRoleByValue("USER"); 
+        await user.$set('roles', [role.id]);
+        user.roles = [role];
         return this.generateToken(user);
     }
 

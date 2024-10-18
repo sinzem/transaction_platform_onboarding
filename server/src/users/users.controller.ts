@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { TransformRoleDto } from './dto/transform-role.dto';
 
 @ApiTags("Users")
 @Controller("api/users")
@@ -45,20 +44,6 @@ export class UsersController {
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.usersService.deleteUser(id);
-    }
-
-    @ApiOperation({summary: "Add role to user"})
-    @ApiResponse({status: 200, type: User}) 
-    @Post("/roles") 
-    addRoleToUser(@Body() userDto: TransformRoleDto) { 
-        return this.usersService.addRoleToUser(userDto);
-    }
-
-    @ApiOperation({summary: "Delete role of user"})
-    @ApiResponse({status: 200, type: User}) 
-    @Patch("/roles") 
-    deleteRoleOfUser(@Body() userDto: TransformRoleDto) { 
-        return this.usersService.deleteRoleOfUser(userDto);
     }
 
 }

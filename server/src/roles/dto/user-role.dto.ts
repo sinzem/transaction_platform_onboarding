@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsString, Length } from "class-validator";
 
-export class TransformRoleDto {
+export class UserRoleDto {
 
     @ApiProperty({example: "USER", description: "Role name"}) 
     // @IsString({message: "This should be a string") 
