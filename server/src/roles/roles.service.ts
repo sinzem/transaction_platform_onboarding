@@ -54,7 +54,7 @@ export class RolesService {
         this.usersService.checkUser(user);
         const role = await this.getRoleByValue(dto.role.toUpperCase());
         this.checkRole(role);
-        await user.$add('roles', role.id);
+        await user.$add("roles", role.id);
         user = await this.usersService.getUserByEmail(dto.email);
         return user;
     }

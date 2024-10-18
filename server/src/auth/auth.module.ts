@@ -10,8 +10,8 @@ import { RolesModule } from 'src/roles/roles.module';
     providers: [AuthService],
     controllers: [AuthController],
     imports: [
-        // forwardRef(() => UsersModule),
         JwtModule.register({
+            global: true,
             secret: process.env.PRIVATE_KEY,
             signOptions: {
                 expiresIn: '24h'
@@ -19,6 +19,10 @@ import { RolesModule } from 'src/roles/roles.module';
         }),
         UsersModule,
         RolesModule
+    ],
+    exports: [
+      AuthService,
+      JwtModule
     ]
 })
 export class AuthModule {}

@@ -19,3 +19,14 @@
 //   }
 // }
 // ---------------------------------------------
+
+/* (Доступ к объекту запроса в ограниченном запросом провайдере можно получить через объект REQUEST:) */
+
+// import { Injectable, Scope, Inject } from '@nestjs/common'
+// import { REQUEST } from '@nestjs/core'
+// import { Request } from 'express'
+
+// @Injectable({ scope: Scope.REQUEST })
+// export class PostService {
+//   constructor(@Inject(REQUEST) private request: Request) {}
+// }
