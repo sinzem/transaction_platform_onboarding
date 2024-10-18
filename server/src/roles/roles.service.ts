@@ -22,37 +22,37 @@ export class RolesService {
         return role;
     }
 
-    async redactionRoleToUser(dto: UserRoleDto, method: string) {
+    async addRoleToUser(dto: UserRoleDto) {
         let user = await this.usersService.getUserByEmail(dto.email);
         this.usersService.checkUser(user);
         const role = await this.getRoleByValue(dto.role.toUpperCase());
         this.checkRole(role);
-        if (method === "add") {
-            await user.$add('roles', role.id);
-        }
-        if (method === "delete") {
-            await user.$remove('roles', role.id);
-        } 
+        await user.$add('roles', role.id);
         user = await this.usersService.getUserByEmail(dto.email);
         return user;
     }
 
-    // async addRoleToUser(dto: UserRoleDto) {
-    //     let user = await this.usersService.getUserByEmail(dto.email);
-    //     this.usersService.checkUser(user);
-    //     const role = await this.getRoleByValue(dto.role.toUpperCase());
-    //     this.checkRole(role);
-    //     await user.$add('roles', role.id);
-    //     user = await this.usersService.getUserByEmail(dto.email);
-    //     return user;
-    // }
+    async deleteRoleOfUser(dto: UserRoleDto) {
+        let user = await this.usersService.getUserByEmail(dto.email);
+        this.usersService.checkUser(user);
+        const role = await this.getRoleByValue(dto.role.toUpperCase());
+        this.checkRole(role);
+        await user.$remove('roles', role.id);
+        user = await this.usersService.getUserByEmail(dto.email);
+        return user;
+    }
 
-    // async deleteRoleOfUser(dto: UserRoleDto) {
+    // async redactionRoleToUser(dto: UserRoleDto, method: string) {
     //     let user = await this.usersService.getUserByEmail(dto.email);
     //     this.usersService.checkUser(user);
     //     const role = await this.getRoleByValue(dto.role.toUpperCase());
     //     this.checkRole(role);
-    //     await user.$remove('roles', role.id);
+    //     if (method === "add") {
+    //         await user.$add('roles', role.id);
+    //     }
+    //     if (method === "delete") {
+            
+    //     } 
     //     user = await this.usersService.getUserByEmail(dto.email);
     //     return user;
     // }
