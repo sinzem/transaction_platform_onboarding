@@ -30,13 +30,15 @@ export class RolesController {
     @ApiResponse({status: 200, type: User})
     @Post("/redaction")
     addRoleToUser(@Body() dto: UserRoleDto) {  
-        return this.roleService.addRoleToUser(dto);
+        const method = "add";
+        return this.roleService.redactionRoleToUser(dto, method);
     }
     
     @ApiOperation({summary: "Delete role of user"})
     @ApiResponse({status: 200, type: User}) 
     @Patch("/redaction") 
     deleteRoleOfUser(@Body() userDto: UserRoleDto) { 
-        return this.roleService.deleteRoleOfUser(userDto);
+        const method = "delete";
+        return this.roleService.redactionRoleToUser(userDto, method);
     }
 }
