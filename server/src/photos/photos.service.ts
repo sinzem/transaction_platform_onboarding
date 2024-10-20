@@ -1,4 +1,4 @@
-import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Photo } from './photos.model';
 import { FilesService } from 'src/files/files.service';
@@ -11,7 +11,6 @@ import * as path from 'path';
 export class PhotosService {
 
     constructor(@InjectModel(Photo) private photoRepository: typeof Photo,
-                // @Inject(forwardRef(() => UsersService))
                 private userService: UsersService,
                 private fileService: FilesService,
                 private authService: AuthService) {}
@@ -29,8 +28,10 @@ export class PhotosService {
     async deletePhoto(id: number) {
         const photo = await this.photoRepository.findOne({where: {id}});
         this.checkPhoto(photo);
-        const filePath = path.resolve(__dirname, "..", 'static'); 
-        fs.rmSync(path.join(filePath, photo.image))
+        const filePath = path.resolve(__dirname, "..", 'static', photo.image); 
+        if (fs.existsSync(filePath)) {
+            fs.rmSync(filePath);
+        }
         await this.photoRepository.destroy({where: {id}});
         return photo;
     }

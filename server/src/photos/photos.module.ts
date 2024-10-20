@@ -14,10 +14,10 @@ import { AuthModule } from 'src/auth/auth.module';
     controllers: [PhotosController],
     imports: [
         SequelizeModule.forFeature([User, Photo]),
-        UsersModule,
         FilesModule,
         AuthModule,
         JwtModule,
+        UsersModule,
     ], 
     exports: [
         PhotosService

@@ -1,17 +1,16 @@
-import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Photo } from 'src/photos/photos.model';
 import * as bcrypt from 'bcrypt';
-import { PhotosService } from 'src/photos/photos.service';
-
-
+import * as fs from "fs";
+import * as path from 'path';
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
-               /*  @Inject(forwardRef(() => PhotosService))*/
-                /* private photosService: PhotosService */ ) {}
+    @InjectModel(Photo) private photoRepository: typeof Photo) {}
 
     async createUser(dto: CreateUserDto) {
         const hashPassword = await bcrypt.hash(dto.password, 5);
@@ -46,13 +45,16 @@ export class UsersService {
     async deleteUser(id: number) {
         const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
         this.checkUser(user);
-        
-        // const filePath = path.resolve(__dirname, "..", 'static'); 
-        // let arr = user.photos
-        // arr.forEach(photo => {
-        //      this.photosService.deletePhoto(photo.id)
-        //     fs.rmSync(path.join(filePath, photo.image))
-        // })
+        const photos = await this.photoRepository.findAll({where: {userId: id}});
+        if (photos) {
+            photos.forEach(photo => {
+                const filePath = path.resolve(__dirname, "..", 'static', photo.image); 
+                if (fs.existsSync(filePath)) {
+                    fs.rmSync(filePath);
+                }
+                this.photoRepository.destroy({where: {id: photo.id}});
+            })
+        }
         await this.userRepository.destroy({where: {id}});
         return user;
     }

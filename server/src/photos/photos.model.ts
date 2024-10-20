@@ -23,6 +23,6 @@ export class Photo extends Model<Photo, UserPhotoAttrs> {
     @Column({type: DataType.STRING})
     image: string;
 
-    @BelongsTo(() => User) 
-    author: User
+    @BelongsTo(() => User, { onDelete: "CASCADE" }) 
+    author: User;
 } 
