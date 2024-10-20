@@ -13,8 +13,7 @@ import { PhotosModule } from './photos/photos.module';
 import { Photo } from './photos/photos.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
-
-
+import { FilesService } from './files/files.service';
 @Module({
     controllers: [],
     providers: [],

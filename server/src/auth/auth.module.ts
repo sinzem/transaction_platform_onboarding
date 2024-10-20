@@ -22,7 +22,7 @@ import { RolesModule } from 'src/roles/roles.module';
     ],
     exports: [
       AuthService,
-      JwtModule
+      JwtModule,
     ]
 })
 export class AuthModule {}

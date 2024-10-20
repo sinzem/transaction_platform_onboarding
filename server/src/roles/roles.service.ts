@@ -10,7 +10,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 export class RolesService {
 
     constructor(@InjectModel(Role) private roleRepository: typeof Role,
-                                   private usersService: UsersService  ) {}
+                                   private usersService: UsersService ) {}
 
     async createRole(dto: CreateRoleDto) {
         const roleName = dto.value.toUpperCase();
@@ -39,6 +39,7 @@ export class RolesService {
     async getRoleByValue(value: string) {
         value = value.toUpperCase();
         const role = await this.roleRepository.findOne({where: {value}});
+        this.checkRole(role);
         return role;
     }
 

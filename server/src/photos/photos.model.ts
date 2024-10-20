@@ -14,14 +14,14 @@ export class Photo extends Model<Photo, UserPhotoAttrs> {
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
     id: number;
 
-    @ApiProperty({example: "21ui43251.jpg", description: "Photo title"}) 
-    @Column({type: DataType.STRING})
-    image: string;
-
     @ApiProperty({example: "1", description: "Unique user ID"}) 
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER})
     userId: number;
+
+    @ApiProperty({example: "21ui43251.jpg", description: "Photo title"}) 
+    @Column({type: DataType.STRING})
+    image: string;
 
     @BelongsTo(() => User) 
     author: User

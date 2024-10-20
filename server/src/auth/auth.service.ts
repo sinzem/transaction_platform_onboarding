@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -6,10 +6,13 @@ import { User } from 'src/users/users.model';
 import { RolesService } from 'src/roles/roles.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as bcrypt from 'bcrypt';
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class AuthService {
-    constructor(private userService: UsersService,
+    constructor(@Inject(REQUEST) private request: Request,
+                private userService: UsersService,
                 private roleService: RolesService,
                 private jwtService: JwtService) {}
 
@@ -28,6 +31,17 @@ export class AuthService {
         await user.$set('roles', [role.id]);
         user.roles = [role];
         return this.generateToken(user);
+    }
+
+    async getPayload() {
+        let token = this.request.headers.authorization.split(" ")[1];
+        const payload = await this.jwtService.verifyAsync(
+            token,
+            {
+              secret: process.env.PRIVATE_KEY
+            }
+        );
+        return payload;
     }
 
     private async generateToken(user: User) {
@@ -51,4 +65,6 @@ export class AuthService {
 
         return user;
     }
+
+
 }
