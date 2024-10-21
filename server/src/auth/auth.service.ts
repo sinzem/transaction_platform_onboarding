@@ -1,13 +1,14 @@
+import * as bcrypt from 'bcrypt';
+import { Request } from 'express';
 import { HttpException, HttpStatus, Inject, Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { REQUEST } from '@nestjs/core';
+
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/users.model';
 import { RolesService } from 'src/roles/roles.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import * as bcrypt from 'bcrypt';
-import { REQUEST } from '@nestjs/core';
-import { Request } from 'express';
 
 @Injectable({scope: Scope.REQUEST})
 export class AuthService {

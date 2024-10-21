@@ -1,8 +1,10 @@
 import 'dotenv/config';
+import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
@@ -11,9 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { PhotosModule } from './photos/photos.module';
 import { Photo } from './photos/photos.model';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import * as path from 'path';
-import { FilesService } from './files/files.service';
+import { UsersModule } from './users/users.module';
+
 @Module({
     controllers: [],
     providers: [],

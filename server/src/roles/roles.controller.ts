@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UsePipes } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from './roles.model';
 import { User } from 'src/users/users.model';
 import { UserRoleDto } from './dto/user-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @ApiTags("Roles")
 @Controller('api/roles')
@@ -14,8 +16,9 @@ export class RolesController {
     constructor(private roleService: RolesService) {}
 
     @ApiOperation({summary: "Creating a role"}) 
-    @ApiResponse({status: 200, type: Role})
+    @ApiResponse({status: 201, type: Role})
     @Post()
+    @UsePipes(ValidationPipe) 
     create(@Body() dto: CreateRoleDto) {  
         return this.roleService.createRole(dto);
     }
@@ -23,6 +26,7 @@ export class RolesController {
     @ApiOperation({summary: "Role editing"}) 
     @ApiResponse({status: 200, type: Role})
     @Put()
+    @UsePipes(ValidationPipe) 
     editRole(@Body() dto: UpdateRoleDto) {  
         return this.roleService.editRole(dto);
     }
@@ -49,8 +53,9 @@ export class RolesController {
     }
 
     @ApiOperation({summary: "Add role to user"}) 
-    @ApiResponse({status: 200, type: User})
+    @ApiResponse({status: 201, type: User})
     @Post("/redaction")
+    @UsePipes(ValidationPipe) 
     addRoleToUser(@Body() dto: UserRoleDto) {  
         return this.roleService.addRoleToUser(dto);
     }
@@ -58,6 +63,7 @@ export class RolesController {
     @ApiOperation({summary: "Delete role of user"})
     @ApiResponse({status: 200, type: User}) 
     @Patch("/redaction") 
+    @UsePipes(ValidationPipe) 
     deleteRoleOfUser(@Body() userDto: UserRoleDto) { 
         return this.roleService.deleteRoleOfUser(userDto);
     }

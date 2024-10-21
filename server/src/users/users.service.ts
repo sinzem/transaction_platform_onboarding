@@ -1,12 +1,15 @@
+import * as fs from "fs";
+import * as path from 'path';
+import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
+
+import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Photo } from 'src/photos/photos.model';
-import * as bcrypt from 'bcrypt';
-import * as fs from "fs";
-import * as path from 'path';
+
+
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,

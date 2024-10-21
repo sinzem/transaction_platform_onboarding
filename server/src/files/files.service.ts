@@ -1,12 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as fs from "fs";
 import * as path from 'path';
 import * as uuid from 'uuid';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class FilesService {
 
-    async createFile(file): Promise<string> {
+    async createFile(file: any): Promise<string> {
         try {
             const resolution = file.originalname.split(".");
             const fileName = uuid.v4() + `.${resolution.at(-1)}`; 
