@@ -9,13 +9,15 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/users.model';
 import { RolesService } from 'src/roles/roles.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable({scope: Scope.REQUEST})
 export class AuthService {
     constructor(@Inject(REQUEST) private request: Request,
                 private userService: UsersService,
                 private roleService: RolesService,
-                private jwtService: JwtService) {}
+                private jwtService: JwtService,
+                private mailService: MailService) {}
 
     async login(dto: LoginAuthDto) {
         const user = await this.validateUser(dto);
@@ -25,9 +27,34 @@ export class AuthService {
     async registration(userDto: CreateUserDto) {
         const candidate = await this.userService.getUserByEmail(userDto.email); 
         if (candidate) {
-            throw new HttpException("User with this email exists", HttpStatus.BAD_REQUEST)
+            throw new HttpException("User with this email exists, try logging in", HttpStatus.BAD_REQUEST)
         }
         const user = await this.userService.createUser(userDto);
+        const token = await this.generateInactiveToken(user);
+        const link = `${process.env.API_URL}/${token.token}`;
+        this.mailService.sendMessage({
+            to: user.email,
+            from: process.env.MAIL_SENDER,
+            subject: "Account activation on " + process.env.API_URL, 
+            text: "",
+            html:  `
+            <div>
+                <h1>Для активации перейдите по ссылке</h1>
+                <a href="${link}">${link}</a>
+            </div>
+            `
+        })
+        return token;
+    }
+
+    async confirmation(value: string) {
+        const payload = await this.jwtService.verifyAsync(
+            value,
+            {
+              secret: process.env.PRIVATE_KEY
+            }
+        );
+        const user = await this.userService.getUserByEmail(payload.email);
         const role = await this.roleService.getRoleByValue("USER"); 
         await user.$set('roles', [role.id]);
         user.roles = [role];
@@ -43,6 +70,13 @@ export class AuthService {
             }
         );
         return payload;
+    }
+
+    private async generateInactiveToken(user: User) {
+        const payload = {email: user.email}
+        return {
+            token: this.jwtService.sign(payload)
+        }
     }
 
     private async generateToken(user: User) {

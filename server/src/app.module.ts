@@ -14,6 +14,7 @@ import { FilesModule } from './files/files.module';
 import { PhotosModule } from './photos/photos.module';
 import { Photo } from './photos/photos.model';
 import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
     controllers: [],
@@ -39,7 +40,8 @@ import { UsersModule } from './users/users.module';
         RolesModule, 
         AuthModule, 
         FilesModule, 
-        PhotosModule,
+        PhotosModule, 
+        MailModule,
   ]
 })
 export class AppModule {}
