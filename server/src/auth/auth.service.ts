@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import * as uuid from "uuid";
 import { Request } from 'express';
 import { HttpException, HttpStatus, Inject, Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -31,7 +32,7 @@ export class AuthService {
         }
         const user = await this.userService.createUser(userDto);
         const token = await this.generateInactiveToken(user);
-        const link = `${process.env.API_URL}/${token.token}`;
+        const link = `${process.env.API_URL}/confirmation/${token.token}`;
         this.mailService.sendMessage({
             to: user.email,
             from: process.env.MAIL_SENDER,
@@ -39,26 +40,29 @@ export class AuthService {
             text: "",
             html:  `
             <div>
-                <h1>Для активации перейдите по ссылке</h1>
-                <a href="${link}">${link}</a>
+                <h1 style="text-align: center">Для активации перейдите по ссылке</h1>
+                <a href="${link}" style="display: block; margin: 0 auto; max-width: 600px">${link}</a>
             </div>
             `
         })
         return token;
     }
 
-    async confirmation(value: string) {
+    async confirmation(link: string) {
         const payload = await this.jwtService.verifyAsync(
-            value,
-            {
-              secret: process.env.PRIVATE_KEY
-            }
+            link,
+            {secret: process.env.PRIVATE_KEY}
         );
-        const user = await this.userService.getUserByEmail(payload.email);
-        const role = await this.roleService.getRoleByValue("USER"); 
-        await user.$set('roles', [role.id]);
-        user.roles = [role];
-        return this.generateToken(user);
+        if (payload) {
+            const user = await this.userService.getUserByEmail(payload.email);
+            this.userService.checkUser(user);
+            const role = await this.roleService.getRoleByValue("USER"); 
+            await user.$set('roles', [role.id]);
+            user.roles = [role];
+            return user;
+        } else {
+            throw new UnauthorizedException({message: "Incorrect token"}); 
+        }  
     }
 
     async getPayload() {

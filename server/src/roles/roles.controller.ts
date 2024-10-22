@@ -38,11 +38,18 @@ export class RolesController {
         return this.roleService.getAllRoles();
     }
     
-    @ApiOperation({summary: "Get role by value"})
+    // @ApiOperation({summary: "Get role by value"})
+    // @ApiResponse({status: 200, type: Role})
+    // @Get('/:value') 
+    // getByValue(@Param('value') value: string) {
+    //     return this.roleService.getRoleByValue(value);
+    // }
+
+    @ApiOperation({summary: "Get role by id"})
     @ApiResponse({status: 200, type: Role})
-    @Get('/:value') 
-    getByValue(@Param('value') value: string) {
-        return this.roleService.getRoleByValue(value);
+    @Get('/:id') 
+    getById(@Param('id') id: number) {
+        return this.roleService.getRoleById(id);
     }
 
     @ApiOperation({summary: "Delete role"})

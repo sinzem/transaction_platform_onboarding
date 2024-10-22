@@ -28,13 +28,20 @@ export class UsersController {
         return this.usersService.getAllUsers();
     }
 
-    @ApiOperation({summary: "Get user by email"})
-    @ApiResponse({status: 200, type: User})
-    @Get("/:email")
-    getUserByEmail(@Param("email") email: string) {
-        return this.usersService.getUserByEmail(email);
-    }
+    // @ApiOperation({summary: "Get user by email"})
+    // @ApiResponse({status: 200, type: User})
+    // @Get("/:email")
+    // getUserByEmail(@Param("email") email: string) {
+    //     return this.usersService.getUserByEmail(email);
+    // }
 
+    @ApiOperation({summary: "Get user by id"})
+    @ApiResponse({status: 200, type: User})
+    @Get("/:id")
+    getUserById(@Param("id") id: number) {
+        return this.usersService.getUserById(id);
+    }
+    
 
     @ApiOperation({summary: "Edit user"})
     @ApiResponse({status: 200, type: User})

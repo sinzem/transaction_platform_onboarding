@@ -44,6 +44,12 @@ export class UsersService {
         const user = await this.userRepository.findOne({where: {email}, include: {all: true}});
         return user;
     }
+
+    async getUserById(id: number) {
+        const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
+        this.checkUser(user);
+        return user;
+    }
     
     async deleteUser(id: number) {
         const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
