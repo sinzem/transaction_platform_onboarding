@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Res, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
@@ -6,6 +6,8 @@ import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
+import { Roles } from 'src/auth/roles-auth.decorator';
+import { RolesGuard } from 'src/auth/roles-guard';
 
 @ApiTags("Users")
 @Controller("api/users")
@@ -15,6 +17,8 @@ export class UsersController {
 
     @ApiOperation({summary: "Creating a user"})
     @ApiResponse({status: 201, type: User}) 
+    @Roles(["ADMIN"])
+    @UseGuards(RolesGuard)
     @Post() 
     @UsePipes(ValidationPipe)
     create(@Body() userDto: CreateUserDto) { 
@@ -23,6 +27,9 @@ export class UsersController {
 
     @ApiOperation({summary: "Get all users"})
     @ApiResponse({status: 200, type: [User]})
+    // @Roles(["WIP-USER, MANAGER, ADMIN"])
+    @Roles(["USER"])
+    @UseGuards(RolesGuard)
     @Get()
     getAll() {
         return this.usersService.getAllUsers();
@@ -37,6 +44,8 @@ export class UsersController {
 
     @ApiOperation({summary: "Get user by id"})
     @ApiResponse({status: 200, type: User})
+    @Roles(["USER, WIP-USER, MANAGER, ADMIN"])
+    @UseGuards(RolesGuard)
     @Get("/:id")
     getUserById(@Param("id") id: number) {
         return this.usersService.getUserById(id);
@@ -45,6 +54,8 @@ export class UsersController {
 
     @ApiOperation({summary: "Edit user"})
     @ApiResponse({status: 200, type: User})
+    // @Roles(["MANAGER, ADMIN"])
+    @UseGuards(RolesGuard)
     @Put()
     @UsePipes(ValidationPipe)
     editUser(@Body() userDto: UpdateUserDto) {
@@ -53,6 +64,8 @@ export class UsersController {
 
     @ApiOperation({summary: "Delete account"})
     @ApiResponse({status: 200, type: User})
+    // @Roles(["MANAGER, ADMIN"])
+    @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.usersService.deleteUser(id);

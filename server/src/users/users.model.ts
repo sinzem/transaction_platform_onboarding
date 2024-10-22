@@ -1,4 +1,3 @@
-/* (модель для создания таблицы users в БД) */
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 
@@ -40,6 +39,10 @@ export class User extends Model<User, UserCreationAttrs> {
     @ApiProperty({example: "12345678", description: "Password"}) 
     @Column({type: DataType.STRING, allowNull: false})
     password: string;
+
+    @ApiProperty({example: "true", description: "Activation status"}) 
+    @Column({type: DataType.BOOLEAN, defaultValue: false})
+    activation: boolean;
 
     @BelongsToMany(() => Role, () => UserRoles)
     roles: Role[];

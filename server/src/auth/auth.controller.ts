@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Redirect, Req, Res, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -26,7 +26,7 @@ export class AuthController {
                     @Res() res) {
         const link = req.params.link;
         this.authService.confirmation(link);
-        return res.redirect(`http://localhost:7000/api/users`);
+        return res.redirect(`http://localhost:7000/api/roles`);
     }
 
     @ApiOperation({summary: "Login"})
@@ -35,6 +35,13 @@ export class AuthController {
     @UsePipes(ValidationPipe)
     login(@Body() userDto: LoginAuthDto) {
         return this.authService.login(userDto);
+    }
+
+    @ApiOperation({summary: "Login"})
+    @ApiResponse({status: 201, description: "JWT token(without roles - access only login or registration)"}) 
+    @Get('/logout/:id')
+    logout(@Param("id") id: number) {
+        return this.authService.logout(id);
     }
 
 }

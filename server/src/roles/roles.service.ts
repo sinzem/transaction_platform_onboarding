@@ -6,12 +6,14 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UsersService } from 'src/users/users.service';
 import { UserRoleDto } from './dto/user-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class RolesService {
 
     constructor(@InjectModel(Role) private roleRepository: typeof Role,
-                                   private usersService: UsersService ) {}
+                                   private usersService: UsersService,
+                                   private authService: AuthService ) {}
 
     async createRole(dto: CreateRoleDto) {
         const roleName = dto.value.toUpperCase();
@@ -64,7 +66,7 @@ export class RolesService {
         this.checkRole(role);
         await user.$add("roles", role.id);
         user = await this.usersService.getUserByEmail(dto.email);
-        return user;
+        return this.authService.generateToken(user);
     }
 
     async deleteRoleOfUser(dto: UserRoleDto) {
@@ -74,7 +76,7 @@ export class RolesService {
         this.checkRole(role);
         await user.$remove('roles', role.id);
         user = await this.usersService.getUserByEmail(dto.email);
-        return user;
+        return this.authService.generateToken(user);
     }
 
     // async redactionRoleToUser(dto: UserRoleDto, method: string) {

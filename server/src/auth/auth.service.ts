@@ -8,21 +8,32 @@ import { REQUEST } from '@nestjs/core';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/users.model';
-import { RolesService } from 'src/roles/roles.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { MailService } from 'src/mail/mail.service';
+import { InjectModel } from '@nestjs/sequelize';
+import { Role } from 'src/roles/roles.model';
 
 @Injectable({scope: Scope.REQUEST})
 export class AuthService {
-    constructor(@Inject(REQUEST) private request: Request,
+    constructor(@InjectModel(Role) private roleRepository: typeof Role,
+                @Inject(REQUEST) private request: Request,
                 private userService: UsersService,
-                private roleService: RolesService,
                 private jwtService: JwtService,
                 private mailService: MailService) {}
 
     async login(dto: LoginAuthDto) {
         const user = await this.validateUser(dto);
+        user.activation = true;
+        await user.save();
         return this.generateToken(user);
+    }
+
+    async logout(id: number) {
+        const user = await this.userService.getUserById(id);
+        this.userService.checkUser(user);
+        user.activation = false;
+        await user.save();
+        return this.generateInactiveToken(user);
     }
 
     async registration(userDto: CreateUserDto) {
@@ -31,6 +42,8 @@ export class AuthService {
             throw new HttpException("User with this email exists, try logging in", HttpStatus.BAD_REQUEST)
         }
         const user = await this.userService.createUser(userDto);
+        user.activation = true;
+        await user.save();
         const token = await this.generateInactiveToken(user);
         const link = `${process.env.API_URL}/confirmation/${token.token}`;
         this.mailService.sendMessage({
@@ -56,7 +69,7 @@ export class AuthService {
         if (payload) {
             const user = await this.userService.getUserByEmail(payload.email);
             this.userService.checkUser(user);
-            const role = await this.roleService.getRoleByValue("USER"); 
+            const role = await this.roleRepository.findOne({where: {value: "USER"}});
             await user.$set('roles', [role.id]);
             user.roles = [role];
             return user;
@@ -77,16 +90,16 @@ export class AuthService {
     }
 
     private async generateInactiveToken(user: User) {
-        const payload = {email: user.email}
+        const payload = {id: user.id, email: user.email}
         return {
             token: this.jwtService.sign(payload)
         }
     }
 
-    private async generateToken(user: User) {
+    async generateToken(user: User) {
         let rolesValue = [];
         user.roles.forEach(role => rolesValue.push(role.value));
-        const payload = {email: user.email, id: user.id, roles: rolesValue};
+        const payload = {email: user.email, id: user.id, roles: rolesValue, activation: true};
         return {
             token: this.jwtService.sign(payload)
         }
