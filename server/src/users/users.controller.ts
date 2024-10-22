@@ -27,7 +27,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Get all users"})
     @ApiResponse({status: 200, type: [User]})
-    // @Roles(["WIP-USER, MANAGER, ADMIN"])
+    // @Roles(["WIP-USER", "MANAGER", "ADMIN"])
     @Roles(["USER"])
     @UseGuards(RolesGuard)
     @Get()
@@ -44,7 +44,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Get user by id"})
     @ApiResponse({status: 200, type: User})
-    @Roles(["USER, WIP-USER, MANAGER, ADMIN"])
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Get("/:id")
     getUserById(@Param("id") id: number) {
@@ -54,7 +54,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Edit user"})
     @ApiResponse({status: 200, type: User})
-    // @Roles(["MANAGER, ADMIN"])
+    // @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Put()
     @UsePipes(ValidationPipe)
@@ -64,7 +64,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Delete account"})
     @ApiResponse({status: 200, type: User})
-    // @Roles(["MANAGER, ADMIN"])
+    // @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {

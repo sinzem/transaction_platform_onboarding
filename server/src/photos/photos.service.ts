@@ -37,6 +37,16 @@ export class PhotosService {
         return photo;
     }
 
+    async getPhotoByUserId(id: number) {
+        const user = await this.userService.getUserById(id);
+        this.userService.checkUser(user);
+        if (user.photos.length > 0) {
+            return user.photos;
+        } else {
+            throw new HttpException("Sorry, no photo", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     checkPhoto(photo: any) {
       if (!photo) {
           throw new HttpException("This photo does not exist", HttpStatus.BAD_REQUEST);

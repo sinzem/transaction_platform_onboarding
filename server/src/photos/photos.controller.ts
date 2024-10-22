@@ -1,4 +1,4 @@
-import { Controller, Delete, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -16,18 +16,26 @@ export class PhotosController {
 
     @ApiOperation({summary: "Add user photo"}) 
     @ApiResponse({status: 201, type: User})
-    @Roles(["USER, WIP-USER, MANAGER, ADMIN"])
+    @Roles(["USER" , "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Post()
     @UseInterceptors(FileInterceptor("image"))
-    addPhoto(
-             @UploadedFile() image: any) {
+    addPhoto(@UploadedFile() image: any) {
         return this.photoService.addPhoto(image)        
+    }
+
+    @ApiOperation({summary: "User photos"}) 
+    @ApiResponse({status: 201, type: [Photo]})
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    @UseGuards(RolesGuard)
+    @Get("/:id")
+    getPhotoByUserId(@Param("id") id: number) {
+        return this.photoService.getPhotoByUserId(id)        
     }
 
     @ApiOperation({summary: "Delete user photo"})
     @ApiResponse({status: 200, type: Photo})
-    @Roles(["USER, WIP-USER, MANAGER, ADMIN"])
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {

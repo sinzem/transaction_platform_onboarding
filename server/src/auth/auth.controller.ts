@@ -30,7 +30,7 @@ export class AuthController {
     }
 
     @ApiOperation({summary: "Login"})
-    @ApiResponse({status: 201, description: "JWT token(24h)"}) 
+    @ApiResponse({status: 201, description: "JWT token(24h - Add when making requests to Headers in the Authorization field as 'Bearer token')"}) 
     @Post('/login')
     @UsePipes(ValidationPipe)
     login(@Body() userDto: LoginAuthDto) {
@@ -38,7 +38,7 @@ export class AuthController {
     }
 
     @ApiOperation({summary: "Login"})
-    @ApiResponse({status: 201, description: "JWT token(without roles - access only login or registration)"}) 
+    @ApiResponse({status: 201, description: "JWT token(without roles - access only login or registration, add when making requests to Headers in the Authorization field as 'Bearer token')"}) 
     @Get('/logout/:id')
     logout(@Param("id") id: number) {
         return this.authService.logout(id);
