@@ -15,6 +15,7 @@ import { PhotosModule } from './photos/photos.module';
 import { Photo } from './photos/photos.model';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { CashModule } from './cash/cash.module';
 
 @Module({
     controllers: [],
@@ -41,7 +42,7 @@ import { MailModule } from './mail/mail.module';
         AuthModule, 
         FilesModule, 
         PhotosModule, 
-        MailModule,
+        MailModule, CashModule,
   ]
 })
 export class AppModule {}

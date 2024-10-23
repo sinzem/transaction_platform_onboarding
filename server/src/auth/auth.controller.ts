@@ -26,7 +26,7 @@ export class AuthController {
                     @Res() res) {
         const link = req.params.link;
         this.authService.confirmation(link);
-        return res.redirect(`http://localhost:7000/api/roles`);
+        return res.redirect(process.env.APP_URL);
     }
 
     @ApiOperation({summary: "Login"})
