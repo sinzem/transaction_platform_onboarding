@@ -8,7 +8,6 @@ import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Photo } from 'src/photos/photos.model';
-import { off } from "process";
 
 
 @Injectable()
@@ -71,16 +70,6 @@ export class UsersService {
         await this.userRepository.destroy({where: {id}});
         return user;
     }
-
-    // async deleteRoleOfUser(dto: TransformRoleDto) {
-    //     const roleById = await this.roleService.getRoleByValue(dto.role.toUpperCase()); 
-    //     this.checkRole(roleById);
-    //     let user = await this.getUserByEmail(dto.email);
-    //     this.checkUser(user);
-    //     await user.$remove('roles', roleById.id);
-    //     user = await this.getUserByEmail(dto.email);
-    //     return user;
-    // }
 
     checkUser(user: any) {
         if (!user) {

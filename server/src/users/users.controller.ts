@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Request, Res, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CacheKey } from '@nestjs/cache-manager';
 
@@ -66,7 +66,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Delete account"})
     @ApiResponse({status: 200, type: User})
-    // @Roles(["MANAGER", "ADMIN"])
+    @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {

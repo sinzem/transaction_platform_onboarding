@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString, Length } from "class-validator";
+import { IsString, Length } from "class-validator";
 
-export class CreateUserDto {
+export class CreateCardDto {
 
     @ApiProperty({example: "0123456789012345", description: "Card number"}) 
-    @IsNumber() 
+    @IsString({message: "This should be a string"}) 
     @Length(16, 16, {message: "The card number length must be 16 characters, only numbers"}) 
-    readonly name: string;
+    readonly cardNumber: string;
 
     @ApiProperty({example: "SKOROBOHATA M", description: "User initials"}) 
     @IsString({message: "This should be a string"}) 
@@ -14,9 +14,9 @@ export class CreateUserDto {
     readonly initials: string;
 
     @ApiProperty({example: "567", description: "Card CVC"}) 
-    @IsNumber() 
+    @IsString({message: "This should be a string"}) 
     @Length(3, 3, {message: 'The CVC code must be 3 characters, only numbers'}) 
-    readonly cardCvc: number;
+    readonly cardCvc: string;
 
     @ApiProperty({example: "06/27", description: "Card expiry date"}) 
     @IsString({message: "This should be a string"}) 

@@ -5,9 +5,9 @@ import { User } from "src/users/users.model";
 
 interface UserCardAttrs {
     userId: number;
-    cardNumber: number;
+    cardNumber: string;
     initials: string;
-    cardCvc: number;
+    cardCvc: string;
     expiry: string;
 } 
 
@@ -24,16 +24,24 @@ export class Card extends Model<Card, UserCardAttrs> {
     userId: number;
 
     @ApiProperty({example: "0000000000000000", description: "Card number"}) 
-    @Column({type: DataType.INTEGER, allowNull: false})
-    cardNumber: number;
+    @Column({type: DataType.STRING, allowNull: false})
+    cardNumber: string;
 
-    @ApiProperty({example: "SKOROBOHATA M", description: "User initials"}) 
+    @ApiProperty({example: "0000000000000000", description: "Card number"}) 
+    @Column({type: DataType.STRING, allowNull: false})
+    cardNumberHidden: string;
+
+    @ApiProperty({example: "95400.00", description: "Balance on the card"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    cardBalance: number;
+
+    @ApiProperty({example: "SKOROBOHATA MARIIA", description: "User initials"}) 
     @Column({type: DataType.STRING, allowNull: false})
     initials: string;
 
     @ApiProperty({example: "345", description: "Card CVC"}) 
-    @Column({type: DataType.INTEGER, allowNull: false})
-    cardCvc: number;
+    @Column({type: DataType.STRING, allowNull: false})
+    cardCvc: string;
 
     @ApiProperty({example: "04/25", description: "Expiry date"}) 
     @Column({type: DataType.STRING, allowNull: false})
