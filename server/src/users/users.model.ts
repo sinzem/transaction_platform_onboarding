@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Card } from "src/cards/cards.model";
 
 import { Photo } from "src/photos/photos.model";
 import { Role } from "src/roles/roles.model";
@@ -40,6 +41,26 @@ export class User extends Model<User, UserCreationAttrs> {
     @Column({type: DataType.STRING, allowNull: false})
     password: string;
 
+    @ApiProperty({example: "85400.00", description: "User balance"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    balance: number;
+
+    @ApiProperty({example: "601.78", description: "User index"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    index: number;
+
+    @ApiProperty({example: "3002.49", description: "User depositing"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    depositing: number;
+
+    @ApiProperty({example: "216", description: "User budget"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    budget: number;
+
+    @ApiProperty({example: "212", description: "User notification"}) 
+    @Column({type: DataType.INTEGER, defaultValue: 0})
+    notification: number;
+
     @ApiProperty({example: "true", description: "Activation status"}) 
     @Column({type: DataType.BOOLEAN, defaultValue: false})
     activation: boolean;
@@ -49,4 +70,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @HasMany(() => Photo, { onDelete: "CASCADE" }) 
     photos: Photo[];
+
+    @HasMany(() => Card, { onDelete: "CASCADE" }) 
+    cards: Card[];
 } 

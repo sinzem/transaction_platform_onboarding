@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Request, Res, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CacheKey } from '@nestjs/cache-manager';
 
 import { UsersService } from './users.service';
 import { User } from './users.model';
@@ -25,14 +26,15 @@ export class UsersController {
         return this.usersService.createUser(userDto);
     }
 
-    @ApiOperation({summary: "Get all users"})
-    @ApiResponse({status: 200, type: [User]})
-    // @Roles(["WIP-USER", "MANAGER", "ADMIN"])
-    // @Roles(["USER"])
+    @ApiOperation({summary: 'Get all users, add "lim" or "of" to the query parameters to determine quantity or indentation'})
+    @ApiResponse({status: 200, description: 'Array of users and their amount(field "total")'})
+    // // @Roles(["WIP-USER", "MANAGER", "ADMIN"])
+    // // @Roles(["USER"])
     @UseGuards(RolesGuard)
+    @CacheKey("users")
     @Get()
-    getAll() {
-        return this.usersService.getAllUsers();
+    getAll(@Req() req) {
+        return this.usersService.getAllUsers(req.query);
     }
 
     // @ApiOperation({summary: "Get user by email"})

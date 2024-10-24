@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CacheModule } from '@nestjs/cache-manager';
 
 import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
@@ -15,7 +16,8 @@ import { PhotosModule } from './photos/photos.module';
 import { Photo } from './photos/photos.model';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
-import { CashModule } from './cash/cash.module';
+import { CardsModule } from './cards/cards.module';
+import { Card } from './cards/cards.model';
 
 @Module({
     controllers: [],
@@ -34,15 +36,21 @@ import { CashModule } from './cash/cash.module';
           username: process.env.POSTGRES_USER, 
           password: process.env.POSTGRESS_PASSWORD, 
           database: process.env.POSTGRES_DB, 
-          models: [User, Role, UserRoles, Photo], 
+          models: [User, Role, UserRoles, Photo, Card], 
           autoLoadModels: true 
         }), 
+        CacheModule.register({
+          ttl: 15000,
+          max: 15,
+          isGlobal: true
+        }),
         UsersModule, 
         RolesModule, 
         AuthModule, 
         FilesModule, 
         PhotosModule, 
-        MailModule, CashModule,
+        MailModule,
+        CardsModule,
   ]
 })
 export class AppModule {}

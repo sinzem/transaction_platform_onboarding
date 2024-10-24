@@ -7,12 +7,13 @@ import { User } from './users.model';
 import { Role } from 'src/roles/roles.model';
 import { UserRoles } from 'src/roles/user-roles.model';
 import { Photo } from 'src/photos/photos.model';
+import { Card } from 'src/cards/cards.model';
 
 @Module({
     providers: [UsersService],
     controllers: [UsersController],
     imports: [
-        SequelizeModule.forFeature([User, Role, UserRoles, Photo]),
+        SequelizeModule.forFeature([User, Role, UserRoles, Photo, Card])
     ],
     exports: [
         UsersService

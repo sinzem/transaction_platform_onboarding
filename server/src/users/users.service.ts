@@ -8,12 +8,13 @@ import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Photo } from 'src/photos/photos.model';
+import { off } from "process";
 
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
-    @InjectModel(Photo) private photoRepository: typeof Photo) {}
+        @InjectModel(Photo) private photoRepository: typeof Photo) {}
 
     async createUser(dto: CreateUserDto) {
         const hashPassword = await bcrypt.hash(dto.password, 5);
@@ -32,12 +33,15 @@ export class UsersService {
         return newUser;
     }
 
-    async getAllUsers() {
-        const users = await this.userRepository.findAll({include: {all: true}});
+    async getAllUsers(params) {
+        const limit = params.lim ? +(params.lim) : null;
+        const offset = params.of ? +(params.of) : null;
+        const total = await this.userRepository.count();
+        const users = await this.userRepository.findAll({limit, offset, include: {all: true}});
         if (!users) {
             throw new HttpException("No users found", HttpStatus.BAD_REQUEST);
         }
-        return users;
+        return {users, total};
     }
 
     async getUserByEmail(email: string) {
