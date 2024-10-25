@@ -72,7 +72,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Add role to user"}) 
     @ApiResponse({status: 201, description: "JWT-token(24h)"})
-    @Roles(["MANAGER", "ADMIN"])
+    // @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Post("/redaction")
     @UsePipes(ValidationPipe) 

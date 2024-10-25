@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { Card } from "src/cards/cards.model";
+import { Payment } from "src/payments/payments.model";
 
 import { Photo } from "src/photos/photos.model";
 import { Role } from "src/roles/roles.model";
@@ -42,15 +43,15 @@ export class User extends Model<User, UserCreationAttrs> {
     password: string;
 
     @ApiProperty({example: "85400.00", description: "User balance"}) 
-    @Column({type: DataType.INTEGER, defaultValue: 0})
-    balance: number;
+    @Column({type: DataType.STRING, defaultValue: 0})
+    balance: string;
 
     @ApiProperty({example: "601.78", description: "User index"}) 
-    @Column({type: DataType.INTEGER, defaultValue: 0})
+    @Column({type: DataType.FLOAT, defaultValue: 0})
     index: number;
 
     @ApiProperty({example: "3002.49", description: "User depositing"}) 
-    @Column({type: DataType.INTEGER, defaultValue: 0})
+    @Column({type: DataType.FLOAT, defaultValue: 0})
     depositing: number;
 
     @ApiProperty({example: "216", description: "User budget"}) 
@@ -73,4 +74,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @HasMany(() => Card, { onDelete: "CASCADE" }) 
     cards: Card[];
+
+    @HasMany(() => Payment, { onDelete: "CASCADE" }) 
+    payments: Payment[];
 } 

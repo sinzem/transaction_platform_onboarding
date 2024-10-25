@@ -3,17 +3,18 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize
 
 import { User } from "src/users/users.model";
 
-interface UserCardAttrs {
+interface PaymentsAttrs {
     userId: number;
-    cardNumber: string;
+    payNumber: string;
     cardNumberHidden: string;
-    initials: string;
-    cardCvc: string;
-    expiry: string;
+    status: string;
+    sum: string;
+    subscription: string;
+    type: string;
 } 
 
-@Table({tableName: "cards"}) 
-export class Card extends Model<Card, UserCardAttrs> {
+@Table({tableName: "payments"}) 
+export class Payment extends Model<Payment, PaymentsAttrs> {
 
     @ApiProperty({example: "1", description: "Unique identifier"}) 
     @Column({type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true})
@@ -24,30 +25,30 @@ export class Card extends Model<Card, UserCardAttrs> {
     @Column({type: DataType.INTEGER, allowNull: false})
     userId: number;
 
-    @ApiProperty({example: "0000000000000000", description: "Card number"}) 
+    @ApiProperty({example: "EKD40PR763W7", description: "Payment number"}) 
     @Column({type: DataType.STRING, allowNull: false})
-    cardNumber: string;
+    payNumber: string;
 
-    @ApiProperty({example: "************0000", description: "Card number"}) 
+    @ApiProperty({example: "8430********0000", description: "Card number"}) 
     @Column({type: DataType.STRING, allowNull: false})
     cardNumberHidden: string;
 
-    @ApiProperty({example: "95400.00", description: "Balance on the card"}) 
-    @Column({type: DataType.STRING, defaultValue: 0})
-    cardBalance: string;
-
-    @ApiProperty({example: "SKOROBOHATA MARIIA", description: "User initials"}) 
+    @ApiProperty({example: "completed", description: "Payment status"}) 
     @Column({type: DataType.STRING, allowNull: false})
-    initials: string;
+    status: string;
 
-    @ApiProperty({example: "345", description: "Card CVC"}) 
+    @ApiProperty({example: "128.99", description: "Payment amount"}) 
     @Column({type: DataType.STRING, allowNull: false})
-    cardCvc: string;
+    sum: string;
 
-    @ApiProperty({example: "04/25", description: "Expiry date"}) 
+    @ApiProperty({example: "Bonus (annual)", description: "Subscription"}) 
+    @Column({type: DataType.STRING, defaultValue: "ordinary"})
+    subscription: string;
+
+    @ApiProperty({example: "withdrawal", description: "Type of payment"}) 
     @Column({type: DataType.STRING, allowNull: false})
-    expiry: string;
+    type: string;
 
     @BelongsTo(() => User, { onDelete: "CASCADE" }) 
-    cards: User;
+    payments: User;
 } 

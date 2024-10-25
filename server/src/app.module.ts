@@ -18,6 +18,8 @@ import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
 import { CardsModule } from './cards/cards.module';
 import { Card } from './cards/cards.model';
+import { PaymentsModule } from './payments/payments.module';
+import { Payment } from './payments/payments.model';
 
 @Module({
     controllers: [],
@@ -36,14 +38,14 @@ import { Card } from './cards/cards.model';
           username: process.env.POSTGRES_USER, 
           password: process.env.POSTGRESS_PASSWORD, 
           database: process.env.POSTGRES_DB, 
-          models: [User, Role, UserRoles, Photo, Card], 
+          models: [User, Role, UserRoles, Photo, Card, Payment], 
           autoLoadModels: true 
         }), 
-        // CacheModule.register({
-        //   ttl: 15000,
-        //   max: 15,
-        //   isGlobal: true
-        // }),
+        CacheModule.register({
+          ttl: 15000,
+          max: 15,
+          isGlobal: true
+        }),
         UsersModule, 
         RolesModule, 
         AuthModule, 
@@ -51,6 +53,7 @@ import { Card } from './cards/cards.model';
         PhotosModule, 
         MailModule,
         CardsModule,
+        PaymentsModule,
   ]
 })
 export class AppModule {}

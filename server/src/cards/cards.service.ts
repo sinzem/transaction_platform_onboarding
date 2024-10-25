@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { createDecipheriv, createCipheriv } from 'crypto';
+
 import { InjectModel } from '@nestjs/sequelize';
 import { Card } from './cards.model';
 import { UsersService } from 'src/users/users.service';
 import { CreateCardDto } from './dto/create-card.dto';
-import { createDecipheriv, createCipheriv } from 'crypto';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
@@ -22,8 +23,8 @@ export class CardsService {
         const cardNumberEncrypted = await this.encryptData(num);
         const cvcEncrypted = await this.encryptData(dto.cardCvc);
         const card = await this.cardRepository.create({...dto, userId: user.id, cardNumber: cardNumberEncrypted, cardNumberHidden, cardCvc: cvcEncrypted});
-        user = await this.userService.getUserById(payload.id);
-        return user;
+        // user = await this.userService.getUserById(payload.id);
+        return card;
     }
 
     async getCardById(id: number) {
@@ -33,6 +34,12 @@ export class CardsService {
         const decipherCvc = await this.decryptData(card.cardCvc);
         card.cardNumber = decipherCardNum;
         card.cardCvc = decipherCvc;
+        return card;
+    }
+
+    async getCardByNumber(number: string) {
+        let card = await this.cardRepository.findAll({where: {cardNumber: number}});
+        this.checkCard(card);
         return card;
     }
 
