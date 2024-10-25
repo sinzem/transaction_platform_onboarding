@@ -6,6 +6,7 @@ import { User } from "src/users/users.model";
 interface UserCardAttrs {
     userId: number;
     cardNumber: string;
+    cardNumberHidden: string;
     initials: string;
     cardCvc: string;
     expiry: string;
@@ -20,14 +21,14 @@ export class Card extends Model<Card, UserCardAttrs> {
 
     @ApiProperty({example: "1", description: "Unique user ID"}) 
     @ForeignKey(() => User)
-    @Column({type: DataType.INTEGER})
+    @Column({type: DataType.INTEGER, allowNull: false})
     userId: number;
 
     @ApiProperty({example: "0000000000000000", description: "Card number"}) 
     @Column({type: DataType.STRING, allowNull: false})
     cardNumber: string;
 
-    @ApiProperty({example: "0000000000000000", description: "Card number"}) 
+    @ApiProperty({example: "************0000", description: "Card number"}) 
     @Column({type: DataType.STRING, allowNull: false})
     cardNumberHidden: string;
 

@@ -66,7 +66,7 @@ export class UsersController {
 
     @ApiOperation({summary: "Delete account"})
     @ApiResponse({status: 200, type: User})
-    @Roles(["MANAGER", "ADMIN"])
+    // @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {

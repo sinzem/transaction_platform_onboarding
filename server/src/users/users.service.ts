@@ -55,7 +55,7 @@ export class UsersService {
     }
     
     async deleteUser(id: number) {
-        const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
+        const user = await this.userRepository.findOne({where: {id}});
         this.checkUser(user);
         const photos = await this.photoRepository.findAll({where: {userId: id}});
         if (photos) {
