@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles-guard';
+import { IdGuard } from 'src/auth/id-guard';
 
 @ApiTags("Users")
 @Controller("api/users")
@@ -46,8 +47,9 @@ export class UsersController {
 
     @ApiOperation({summary: "Get user by id"})
     @ApiResponse({status: 200, type: User})
-    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
-    @UseGuards(RolesGuard)
+    // @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    // @UseGuards(RolesGuard)
+    @UseGuards(IdGuard)
     @Get("/:id")
     getUserById(@Param("id") id: number) {
         return this.usersService.getUserById(id);
@@ -57,7 +59,8 @@ export class UsersController {
     @ApiOperation({summary: "Edit user"})
     @ApiResponse({status: 200, type: User})
     // @Roles(["MANAGER", "ADMIN"])
-    @UseGuards(RolesGuard)
+    // @UseGuards(RolesGuard)
+    // @UseGuards(IdGuard)
     @Put()
     @UsePipes(ValidationPipe)
     editUser(@Body() userDto: UpdateUserDto) {
@@ -67,7 +70,8 @@ export class UsersController {
     @ApiOperation({summary: "Delete account"})
     @ApiResponse({status: 200, type: User})
     // @Roles(["MANAGER", "ADMIN"])
-    @UseGuards(RolesGuard)
+    // @UseGuards(RolesGuard)
+    @UseGuards(IdGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.usersService.deleteUser(id);

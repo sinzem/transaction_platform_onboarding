@@ -37,7 +37,7 @@ export class AuthController {
         return this.authService.login(userDto);
     }
 
-    @ApiOperation({summary: "Login"})
+    @ApiOperation({summary: "Logout"})
     @ApiResponse({status: 201, description: "JWT token(without roles - access only login or registration, add to Local Storage and add when making requests to Headers in the Authorization field as 'Bearer token')"}) 
     @Get('/logout/:id')
     logout(@Param("id") id: number) {

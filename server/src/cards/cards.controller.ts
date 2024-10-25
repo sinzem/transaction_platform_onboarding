@@ -6,6 +6,7 @@ import { Card } from './cards.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles-guard';
 import { CreateCardDto } from './dto/create-card.dto';
+import { IdGuard } from 'src/auth/id-guard';
 
 @ApiTags("Cards")
 @Controller('api/cards')
@@ -25,8 +26,9 @@ export class CardsController {
 
     @ApiOperation({summary: "Get card by id"})
     @ApiResponse({status: 200, type: Card})
-    // @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
+    @UseGuards(IdGuard)
     @Get("/:id")
     getUserById(@Param("id") id: number) {
         return this.cardsService.getCardById(id);
@@ -34,8 +36,9 @@ export class CardsController {
 
     @ApiOperation({summary: "Delete card"})
     @ApiResponse({status: 200, type: Card})
-        // @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
+    @UseGuards(IdGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.cardsService.deleteCard(id);

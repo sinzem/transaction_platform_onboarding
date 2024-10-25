@@ -39,11 +39,11 @@ import { Card } from './cards/cards.model';
           models: [User, Role, UserRoles, Photo, Card], 
           autoLoadModels: true 
         }), 
-        CacheModule.register({
-          ttl: 15000,
-          max: 15,
-          isGlobal: true
-        }),
+        // CacheModule.register({
+        //   ttl: 15000,
+        //   max: 15,
+        //   isGlobal: true
+        // }),
         UsersModule, 
         RolesModule, 
         AuthModule, 

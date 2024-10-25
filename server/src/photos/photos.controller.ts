@@ -7,6 +7,7 @@ import { Photo } from './photos.model';
 import { User } from 'src/users/users.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles-guard';
+import { IdGuard } from 'src/auth/id-guard';
 
 @ApiTags("User photos")
 @Controller("api/photos")
@@ -37,6 +38,7 @@ export class PhotosController {
     @ApiResponse({status: 200, type: Photo})
     @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
+    @UseGuards(IdGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.photoService.deletePhoto(id);

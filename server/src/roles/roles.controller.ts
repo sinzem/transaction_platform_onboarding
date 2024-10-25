@@ -18,7 +18,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Creating a role"}) 
     @ApiResponse({status: 201, type: Role})
-    // @Roles(["ADMIN"])
+    @Roles(["ADMIN"])
     @UseGuards(RolesGuard)
     @Post()
     @UsePipes(ValidationPipe) 
@@ -38,7 +38,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Get array of roles"})
     @ApiResponse({status: 200, type: [Role]})
-    // @Roles(["MANAGER", "ADMIN"])
+    @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Get() 
     getAllRoles() {
@@ -63,7 +63,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Delete role"})
     @ApiResponse({status: 200, type: Role})
-    // @Roles(["ADMIN"])
+    @Roles(["ADMIN"])
     @UseGuards(RolesGuard)
     @Delete("/:id")
     deleteRole(@Param("id") id: number) {
@@ -72,7 +72,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Add role to user"}) 
     @ApiResponse({status: 201, description: "JWT-token(24h)"})
-    // @Roles(["MANAGER", "ADMIN"])
+    @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Post("/redaction")
     @UsePipes(ValidationPipe) 
@@ -82,7 +82,7 @@ export class RolesController {
     
     @ApiOperation({summary: "Delete role of user"})
     @ApiResponse({status: 200, description: "JWT-token(24h)"}) 
-    // @Roles(["MANAGER", "ADMIN"])
+    @Roles(["MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
     @Patch("/redaction") 
     @UsePipes(ValidationPipe) 

@@ -11,7 +11,7 @@ export class RolesGuard implements CanActivate {
                 private usersService: UsersService,
                 private reflector: Reflector) {}
 
-    async canActivate(context: ExecutionContext): Promise<boolean>{
+  async canActivate(context: ExecutionContext): Promise<boolean>{
     const requiredRoles = this.reflector.get(Roles, context.getHandler());
     if (!requiredRoles) {
         return true;
