@@ -33,7 +33,7 @@ export class Card extends Model<Card, UserCardAttrs> {
     cardNumberHidden: string;
 
     @ApiProperty({example: "95400.00", description: "Balance on the card"}) 
-    @Column({type: DataType.STRING, defaultValue: 0})
+    @Column({type: DataType.STRING, defaultValue: "0"})
     cardBalance: string;
 
     @ApiProperty({example: "SKOROBOHATA MARIIA", description: "User initials"}) 

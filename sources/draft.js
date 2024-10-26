@@ -30,3 +30,10 @@
 // export class PostService {
 //   constructor(@Inject(REQUEST) private request: Request) {}
 // }
+
+// -----------------------------------------------------------
+// throw new HttpException("Пользователь не найден", HttpStatus.NOT_FOUND)
+// throw new HttpException('Произошла ошибка при записи файла', HttpStatus.INTERNAL_SERVER_ERROR);
+//  super(response, HttpStatus.BAD_REQUEST);
+//  throw new UnauthorizedException({message: 'Пользователь не авторизован'}); 
+//  throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN); 

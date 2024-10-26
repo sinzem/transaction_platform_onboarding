@@ -47,9 +47,9 @@ export class UsersController {
 
     @ApiOperation({summary: "Get user by id"})
     @ApiResponse({status: 200, type: User})
-    // @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
-    // @UseGuards(RolesGuard)
-    @UseGuards(IdGuard)
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    @UseGuards(RolesGuard)
+    // @UseGuards(IdGuard)
     @Get("/:id")
     getUserById(@Param("id") id: number) {
         return this.usersService.getUserById(id);
@@ -60,7 +60,6 @@ export class UsersController {
     @ApiResponse({status: 200, type: User})
     // @Roles(["MANAGER", "ADMIN"])
     // @UseGuards(RolesGuard)
-    // @UseGuards(IdGuard)
     @Put()
     @UsePipes(ValidationPipe)
     editUser(@Body() userDto: UpdateUserDto) {

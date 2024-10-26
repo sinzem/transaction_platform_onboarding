@@ -118,5 +118,12 @@ export class AuthService {
         return user;
     }
 
-
+    async checkUserOwnership(verifiable) {
+        const payload = await this.getPayload();
+        if (verifiable.userId === payload.id || payload.roles.includes("ADMIN")) {
+            return true;
+        } else {
+            return false; 
+        }
+    }
 }

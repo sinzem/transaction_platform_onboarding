@@ -34,7 +34,7 @@ export class RolesService {
     async getAllRoles() {
         const roles = await this.roleRepository.findAll();
         if (!roles) {
-            throw new HttpException("No roles found", HttpStatus.BAD_REQUEST);
+            throw new HttpException("No roles found", HttpStatus.NOT_FOUND);
         }
         return roles;
     }

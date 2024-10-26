@@ -43,7 +43,7 @@ export class User extends Model<User, UserCreationAttrs> {
     password: string;
 
     @ApiProperty({example: "85400.00", description: "User balance"}) 
-    @Column({type: DataType.STRING, defaultValue: 0})
+    @Column({type: DataType.STRING, defaultValue: "0"})
     balance: string;
 
     @ApiProperty({example: "601.78", description: "User index"}) 

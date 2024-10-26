@@ -29,11 +29,22 @@ export class PhotosService {
     async deletePhoto(id: number) {
         const photo = await this.photoRepository.findOne({where: {id}});
         this.checkPhoto(photo);
-        const filePath = path.resolve(__dirname, "..", 'static', photo.image); 
-        if (fs.existsSync(filePath)) {
-            fs.rmSync(filePath);
+        const check = await this.authService.checkUserOwnership(photo);
+        if (!check) {
+            throw new HttpException("This is not your photo", HttpStatus.FORBIDDEN); 
+        } else {
+            const filePath = path.resolve(__dirname, "..", 'static', photo.image); 
+            if (fs.existsSync(filePath)) {
+                fs.rmSync(filePath);
+            }
+            await this.photoRepository.destroy({where: {id}});
+            return photo;
         }
-        await this.photoRepository.destroy({where: {id}});
+    }
+
+    async getPhotoById(id: number) {
+        const photo = await this.photoRepository.findOne({where: {id}});
+        this.checkPhoto(photo);
         return photo;
     }
 
@@ -43,14 +54,13 @@ export class PhotosService {
         if (user.photos.length > 0) {
             return user.photos;
         } else {
-            throw new HttpException("Sorry, no photo", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Sorry, no photo", HttpStatus.NOT_FOUND);
         }
     }
 
     checkPhoto(photo: any) {
-      if (!photo) {
-          throw new HttpException("This photo does not exist", HttpStatus.BAD_REQUEST);
-      }
-  }
-
+        if (!photo) {
+            throw new HttpException("This photo does not exist", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

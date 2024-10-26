@@ -25,11 +25,20 @@ export class PhotosController {
         return this.photoService.addPhoto(image)        
     }
 
+    @ApiOperation({summary: "User photo"}) 
+    @ApiResponse({status: 201, type: Photo})
+    @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
+    @UseGuards(RolesGuard)
+    @Get("/:id")
+    getPhotoById(@Param("id") id: number) {
+        return this.photoService.getPhotoById(id)        
+    }
+
     @ApiOperation({summary: "User photos"}) 
     @ApiResponse({status: 201, type: [Photo]})
     @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
-    @Get("/:id")
+    @Get("/user/:id")
     getPhotoByUserId(@Param("id") id: number) {
         return this.photoService.getPhotoByUserId(id)        
     }
@@ -38,7 +47,6 @@ export class PhotosController {
     @ApiResponse({status: 200, type: Photo})
     @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     @UseGuards(RolesGuard)
-    @UseGuards(IdGuard)
     @Delete("/:id")
     deleteUser(@Param("id") id: number) {
         return this.photoService.deletePhoto(id);

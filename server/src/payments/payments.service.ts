@@ -40,12 +40,43 @@ export class PaymentsService {
             await card.save();
             const status = "completed";
             const check = await this.paymentRepository.create({...dto, userId, payNumber, cardNumberHidden, status, type});
+            if (!check) {
+                throw new HttpException("Error occurred. Contact support", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return check;
         }
     }
 
     async withdrawal(dto: WithdrawalDto) {
+        const payload = await this.authService.getPayload();
+        const userId = payload.id;
+        const type = "withdrawal";
+        const payNumber = await this.genPayNumber();
+        const cardNumberHidden = this.cardHidden(dto.cardNumber);
+        const user = await this.userService.getUserById(userId);
+        const cardEnc = await this.cardService.encryptData(dto.cardNumber);
+        const checkCard = await this.cardService.getCardByNumber(cardEnc);
+        if (+(user.balance) < +(dto.sum)) {
+            throw new HttpException("Not enough money", HttpStatus.BAD_REQUEST);
+        }
+        let card;
 
+        if (!checkCard || checkCard.length === 0) {
+            user.balance = (+(user.balance) - +(dto.sum)).toFixed(2);
+            await user.save();
+        } else {
+            card = checkCard[0];
+            user.balance = (+(user.balance) - +(dto.sum)).toFixed(2);
+            card.cardBalance = (+(card.cardBalance) + +(dto.sum)).toFixed(2);
+            await user.save();
+            await card.save();
+        }
+        const status = "completed";
+        const check = await this.paymentRepository.create({...dto, userId, payNumber, cardNumberHidden, status, type});
+        if (!check) {
+            throw new HttpException("Error occurred. Contact support", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return check;
     }
 
     private cardHidden(str) {

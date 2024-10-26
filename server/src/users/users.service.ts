@@ -36,9 +36,9 @@ export class UsersService {
         const limit = params.lim ? +(params.lim) : null;
         const offset = params.of ? +(params.of) : null;
         const total = await this.userRepository.count();
-        const users = await this.userRepository.findAll({limit, offset, include: {all: true}});
+        const users = await this.userRepository.findAll({limit, offset, /* include: {all: true} */});
         if (!users) {
-            throw new HttpException("No users found", HttpStatus.BAD_REQUEST);
+            throw new HttpException("No users found", HttpStatus.NOT_FOUND);
         }
         return {users, total};
     }
@@ -73,7 +73,7 @@ export class UsersService {
 
     checkUser(user: any) {
         if (!user) {
-            throw new HttpException("User not found", HttpStatus.BAD_REQUEST);
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
         }
     }
 

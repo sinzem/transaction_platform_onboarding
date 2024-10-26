@@ -7,7 +7,6 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles-guard';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { ReplenishmentDto } from './dto/replenishment.dto';
-import { IdGuard } from 'src/auth/id-guard';
 import { WithdrawalDto } from './dto/withdrawal.dto';
 
 @ApiTags("Payments")
@@ -30,7 +29,6 @@ export class PaymentsController {
     @ApiResponse({status: 201, type: Payment}) 
     // @Roles(["USER", "WIP-USER", "MANAGER", "ADMIN"])
     // @UseGuards(RolesGuard)
-    @UseGuards(IdGuard)
     @Post("/withdrawal") 
     @UsePipes(ValidationPipe)
     withdrawal(@Body() dto: WithdrawalDto) { 

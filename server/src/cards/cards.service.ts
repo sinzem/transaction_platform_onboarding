@@ -23,18 +23,23 @@ export class CardsService {
         const cardNumberEncrypted = await this.encryptData(num);
         const cvcEncrypted = await this.encryptData(dto.cardCvc);
         const card = await this.cardRepository.create({...dto, userId: user.id, cardNumber: cardNumberEncrypted, cardNumberHidden, cardCvc: cvcEncrypted});
-        // user = await this.userService.getUserById(payload.id);
-        return card;
+        user = await this.userService.getUserById(payload.id);
+        return user;
     }
 
     async getCardById(id: number) {
         let card = await this.cardRepository.findOne({where: {id}});
         this.checkCard(card);
-        const decipherCardNum = await this.decryptData(card.cardNumber);
-        const decipherCvc = await this.decryptData(card.cardCvc);
-        card.cardNumber = decipherCardNum;
-        card.cardCvc = decipherCvc;
-        return card;
+        const check = await this.authService.checkUserOwnership(card);
+        if (!check) {
+            throw new HttpException("This is not your card", HttpStatus.FORBIDDEN); 
+        } else {
+            const decipherCardNum = await this.decryptData(card.cardNumber);
+            const decipherCvc = await this.decryptData(card.cardCvc);
+            card.cardNumber = decipherCardNum;
+            card.cardCvc = decipherCvc;
+            return card;
+        }
     }
 
     async getCardByNumber(number: string) {
@@ -46,8 +51,13 @@ export class CardsService {
     async deleteCard(id: number) {
         let card = await this.cardRepository.findOne({where: {id}});
         this.checkCard(card);
-        await this.cardRepository.destroy({where: {id}});
-        return card;
+        const check = await this.authService.checkUserOwnership(card);
+        if (!check) {
+            throw new HttpException("This is not your card", HttpStatus.FORBIDDEN); 
+        } else {
+            await this.cardRepository.destroy({where: {id}});
+            return card;
+        }
     }
 
     async encryptData(str) {
@@ -70,10 +80,9 @@ export class CardsService {
 
     checkCard(card: any) {
         if (!card) {
-            throw new HttpException("Card not found", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Card not found", HttpStatus.NOT_FOUND);
         }
     }
-    // const back = await this.decryptData(cardNumberEncrypted, key, iv);
 }
 
 
