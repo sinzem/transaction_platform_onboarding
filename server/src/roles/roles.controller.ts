@@ -18,7 +18,7 @@ export class RolesController {
 
     @ApiOperation({summary: "Creating a role"}) 
     @ApiResponse({status: 201, type: Role})
-    @Roles(["ADMIN"])
+    // @Roles(["ADMIN"])
     @UseGuards(RolesGuard)
     @Post()
     @UsePipes(ValidationPipe) 

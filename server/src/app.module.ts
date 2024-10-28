@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
@@ -23,7 +25,12 @@ import { Payment } from './payments/payments.model';
 
 @Module({
     controllers: [],
-    providers: [],
+    providers: [
+      {
+        provide: APP_GUARD,
+        useClass: ThrottlerGuard
+      }
+    ],
     imports: [
         // ConfigModule.forRoot({
         //     envFilePath: `.${process.env.NODE_ENV}.env` 
@@ -31,6 +38,10 @@ import { Payment } from './payments/payments.model';
         ServeStaticModule.forRoot({
             rootPath: path.resolve(__dirname, 'static')
         }),
+        ThrottlerModule.forRoot([{
+          ttl: 10000,
+          limit: 10,
+        }]),
         SequelizeModule.forRoot({ 
           dialect: 'postgres',
           host: process.env.POSTGRES_HOST, 
